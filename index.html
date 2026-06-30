@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة تقييم المتدربين - صيدليات آل مغاوري</title>
+    <!-- Google Fonts: Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- App Container -->
+    <div class="app-container">
+        
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-logo">
+                <img src="logo.png" alt="شعار صيدليات آل مغاوري" id="logo-img">
+            </div>
+            <div class="header-title">
+                <h1>صيدليات آل مغاوري</h1>
+                <p>نظام التقييم والمتابعة اليومية للمتدربين</p>
+            </div>
+            <nav class="header-nav">
+                <button id="btn-supervisor-view" class="nav-btn active">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    نموذج التقييم (المشرف)
+                </button>
+                <button id="btn-manager-view" class="nav-btn">
+                    <i class="fa-solid fa-chart-line"></i>
+                    لوحة المدير (مدير الفرع)
+                    <span id="badge-count" class="badge">0</span>
+                </button>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            
+            <!-- View 1: Supervisor Evaluation Form -->
+            <section id="supervisor-view" class="view-section active">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-square-poll-horizontal"></i> تسجيل تقييم أداء متدرب جديد</h2>
+                    <p>يرجى إدخال البيانات بدقة، سيتم إرسال هذا التقييم فورياً لمدير الفرع المباشر.</p>
+                </div>
+                
+                <form id="evaluation-form" class="g-form">
+                    
+                    <!-- Basic Info Card -->
+                    <div class="form-card">
+                        <h3 class="card-title"><i class="fa-solid fa-user-tie"></i> البيانات الأساسية</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="trainee-name">اسم المتدرب <span class="required">*</span></label>
+                                <input type="text" id="trainee-name" required placeholder="أدخل اسم المتدرب الرباعي">
+                            </div>
+                            <div class="form-group">
+                                <label for="branch-name">الفرع <span class="required">*</span></label>
+                                <select id="branch-name" required>
+                                    <option value="" disabled selected>اختر الفرع</option>
+                                    <option value="الفرع الرئيسي">الفرع الرئيسي</option>
+                                    <option value="فرع مدينة نصر">فرع مدينة نصر</option>
+                                    <option value="فرع التجمع الخامس">فرع التجمع الخامس</option>
+                                    <option value="فرع المعادي">فرع المعادي</option>
+                                    <option value="فرع مصر الجديدة">فرع مصر الجديدة</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="shift-time">توقيت الشيفت <span class="required">*</span></label>
+                                <select id="shift-time" required>
+                                    <option value="" disabled selected>اختر الشيفت</option>
+                                    <option value="صباحي (8:00 ص - 4:00 م)">صباحي (8:00 ص - 4:00 م)</option>
+                                    <option value="مسائي (4:00 م - 12:00 ص)">مسائي (4:00 م - 12:00 ص)</option>
+                                    <option value="ليلي (12:00 ص - 8:00 ص)">ليلي (12:00 ص - 8:00 ص)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="evaluation-date">تاريخ التقييم</label>
+                                <input type="date" id="evaluation-date" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="supervisor-name">اسم المشرف المتابع <span class="required">*</span></label>
+                                <input type="text" id="supervisor-name" required placeholder="أدخل اسمك الكريم">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tasks Checklist Card -->
+                    <div class="form-card">
+                        <div class="card-header-flex">
+                            <h3 class="card-title"><i class="fa-solid fa-list-check"></i> أولاً: المهام المطلوبة للشيفت اليومي</h3>
+                            <button type="button" id="btn-add-task" class="btn-secondary"><i class="fa-solid fa-plus"></i> إضافة مهمة أخرى</button>
+                        </div>
+                        
+                        <div class="tasks-container">
+                            <table class="tasks-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%">م</th>
+                                        <th style="width: 55%">المهمة المطلوبة للشيفت</th>
+                                        <th style="width: 25%">حالة الإنجاز</th>
+                                        <th style="width: 15%">حذف</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tasks-tbody">
+                                    <!-- Row 1 -->
+                                    <tr class="task-row">
+                                        <td class="task-number">1</td>
+                                        <td>
+                                            <input type="text" class="task-desc" required placeholder="مثال: جرد وتدقيق أصناف الثلاجة">
+                                        </td>
+                                        <td>
+                                            <div class="status-toggle">
+                                                <input type="checkbox" id="task-status-1" class="task-status-chk">
+                                                <label for="task-status-1" class="status-label">
+                                                    <span class="status-done">تم الإنجاز <i class="fa-solid fa-check"></i></span>
+                                                    <span class="status-not-done">معلق <i class="fa-solid fa-hourglass-start"></i></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn-delete-row" disabled><i class="fa-solid fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <!-- Row 2 -->
+                                    <tr class="task-row">
+                                        <td class="task-number">2</td>
+                                        <td>
+                                            <input type="text" class="task-desc" required placeholder="مثال: مراجعة تاريخ الصلاحية للرفوف الأمامية">
+                                        </td>
+                                        <td>
+                                            <div class="status-toggle">
+                                                <input type="checkbox" id="task-status-2" class="task-status-chk">
+                                                <label for="task-status-2" class="status-label">
+                                                    <span class="status-done">تم الإنجاز <i class="fa-solid fa-check"></i></span>
+                                                    <span class="status-not-done">معلق <i class="fa-solid fa-hourglass-start"></i></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn-delete-row" onclick="deleteTaskRow(this)"><i class="fa-solid fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Performance Evaluation Card -->
+                    <div class="form-card">
+                        <h3 class="card-title"><i class="fa-solid fa-star-half-stroke"></i> ثانياً: تقييم الأداء والسلوكيات العامة</h3>
+                        
+                        <div class="criteria-container">
+                            <!-- Criterion 1 -->
+                            <div class="criterion-item">
+                                <div class="criterion-info">
+                                    <h4>1. الالتزام بمواعيد الشيفت والزي الموحد</h4>
+                                    <p>الانضباط في الحضور، الالتزام بالوقت والمظهر اللائق بالصيدلية.</p>
+                                </div>
+                                <div class="rating-options">
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-1" value="5" required>
+                                        <span class="rating-text score-5">ممتاز</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-1" value="4">
+                                        <span class="rating-text score-4">جيد جداً</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-1" value="3">
+                                        <span class="rating-text score-3">جيد</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-1" value="2">
+                                        <span class="rating-text score-2">مقبول</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-1" value="1">
+                                        <span class="rating-text score-1">بحاجة لتحسين</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Criterion 2 -->
+                            <div class="criterion-item">
+                                <div class="criterion-info">
+                                    <h4>2. سرعة التعلم والاستجابة للتوجيهات</h4>
+                                    <p>مدى استيعاب شرح الأدوية، وحفظ أماكن المستحضرات والتعامل مع النظام.</p>
+                                </div>
+                                <div class="rating-options">
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-2" value="5" required>
+                                        <span class="rating-text score-5">ممتاز</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-2" value="4">
+                                        <span class="rating-text score-4">جيد جداً</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-2" value="3">
+                                        <span class="rating-text score-3">جيد</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-2" value="2">
+                                        <span class="rating-text score-2">مقبول</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-2" value="1">
+                                        <span class="rating-text score-1">بحاجة لتحسين</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Criterion 3 -->
+                            <div class="criterion-item">
+                                <div class="criterion-info">
+                                    <h4>3. دقة وجودة تنفيذ المهام المطلوبة</h4>
+                                    <p>التدقيق في قراءة الروشتات، تحضير الطلبات، وترتيب البضائع دون أخطاء.</p>
+                                </div>
+                                <div class="rating-options">
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-3" value="5" required>
+                                        <span class="rating-text score-5">ممتاز</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-3" value="4">
+                                        <span class="rating-text score-4">جيد جداً</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-3" value="3">
+                                        <span class="rating-text score-3">جيد</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-3" value="2">
+                                        <span class="rating-text score-2">مقبول</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-3" value="1">
+                                        <span class="rating-text score-1">بحاجة لتحسين</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Criterion 4 -->
+                            <div class="criterion-item">
+                                <div class="criterion-info">
+                                    <h4>4. مهارات التواصل الإيجابي مع العملاء والزملاء</h4>
+                                    <p>البشاشة في الاستقبال، واللباقة، والتعامل الأخلاقي والمهني الراقي.</p>
+                                </div>
+                                <div class="rating-options">
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-4" value="5" required>
+                                        <span class="rating-text score-5">ممتاز</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-4" value="4">
+                                        <span class="rating-text score-4">جيد جداً</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-4" value="3">
+                                        <span class="rating-text score-3">جيد</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-4" value="2">
+                                        <span class="rating-text score-2">مقبول</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-4" value="1">
+                                        <span class="rating-text score-1">بحاجة لتحسين</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Criterion 5 -->
+                            <div class="criterion-item">
+                                <div class="criterion-info">
+                                    <h4>5. روح المبادرة والتعاون والعمل الجماعي</h4>
+                                    <p>المساعدة في الحالات الطارئة، السعي للمعرفة الذاتية، ومساعدة الفريق.</p>
+                                </div>
+                                <div class="rating-options">
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-5" value="5" required>
+                                        <span class="rating-text score-5">ممتاز</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-5" value="4">
+                                        <span class="rating-text score-4">جيد جداً</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-5" value="3">
+                                        <span class="rating-text score-3">جيد</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-5" value="2">
+                                        <span class="rating-text score-2">مقبول</span>
+                                    </label>
+                                    <label class="rating-label">
+                                        <input type="radio" name="rating-5" value="1">
+                                        <span class="rating-text score-1">بحاجة لتحسين</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes Card -->
+                    <div class="form-card">
+                        <h3 class="card-title"><i class="fa-solid fa-comment-dots"></i> ثالثاً: ملاحظات إضافية وتوصيات</h3>
+                        <div class="form-group">
+                            <label for="evaluation-notes">اكتب أي تعليقات أخرى حول أداء المتدرب أو الجوانب التي تتطلب التحسين:</label>
+                            <textarea id="evaluation-notes" rows="4" placeholder="مثال: يظهر تقدماً ملحوظاً في قراءة الروشتات الصعبة، يحتاج لبعض التوجيه في استخدام كمبيوتر الصيدلية..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Submit Section -->
+                    <div class="form-actions">
+                        <button type="submit" id="btn-submit-eval" class="btn-primary">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            إرسال التقييم إلى مدير الفرع
+                        </button>
+                    </div>
+
+                </form>
+            </section>
+            
+            <!-- View 2: Manager Dashboard -->
+            <section id="manager-view" class="view-section">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-chart-line"></i> لوحة تحكم ومتابعة المدير</h2>
+                    <p>عرض التقييمات المرسلة من المشرفين في كافة الفروع، مع إمكانية المراجعة والاعتماد الفوري.</p>
+                </div>
+
+                <!-- Stats Overview -->
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-blue"><i class="fa-solid fa-users"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">إجمالي التقييمات المستلمة</span>
+                            <span id="stat-total-evals" class="stat-value">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-orange"><i class="fa-solid fa-star"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">متوسط أداء المتدربين</span>
+                            <span id="stat-avg-rating" class="stat-value">0 / 5</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-green"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">المهام المنجزة بنجاح</span>
+                            <span id="stat-tasks-rate" class="stat-value">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filters-card">
+                    <div class="filters-grid">
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-magnifying-glass"></i> بحث باسم المتدرب</label>
+                            <input type="text" id="search-trainee" placeholder="اكتب اسم المتدرب للبحث...">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-store"></i> تصفية بالفرع</label>
+                            <select id="filter-branch">
+                                <option value="all">كل الفروع</option>
+                                <option value="الفرع الرئيسي">الفرع الرئيسي</option>
+                                <option value="فرع مدينة نصر">فرع مدينة نصر</option>
+                                <option value="فرع التجمع الخامس">فرع التجمع الخامس</option>
+                                <option value="فرع المعادي">فرع المعادي</option>
+                                <option value="فرع مصر الجديدة">فرع مصر الجديدة</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fa-solid fa-calendar-day"></i> تصفية بالتاريخ</label>
+                            <input type="date" id="filter-date">
+                        </div>
+                        <div class="form-group align-end">
+                            <button id="btn-clear-filters" class="btn-clear"><i class="fa-solid fa-rotate-left"></i> إعادة تعيين</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Evaluation List Table -->
+                <div class="table-card">
+                    <div class="card-header-flex">
+                        <h3 class="card-title"><i class="fa-solid fa-clipboard-list"></i> قائمة التقييمات المستلمة</h3>
+                        <button id="btn-reset-data" class="btn-danger-text"><i class="fa-solid fa-trash-can"></i> مسح كافة البيانات</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>تاريخ التقييم</th>
+                                    <th>اسم المتدرب</th>
+                                    <th>الفرع</th>
+                                    <th>الشيفت</th>
+                                    <th>المشرف المتابع</th>
+                                    <th>متوسط التقييم</th>
+                                    <th>حالة الاعتماد</th>
+                                    <th>الخيارات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="evaluations-list-tbody">
+                                <!-- Dynamic entries go here -->
+                                <tr>
+                                    <td colspan="8" class="empty-state">
+                                        <i class="fa-regular fa-folder-open"></i>
+                                        <p>لا توجد تقييمات مسجلة حالياً في النظام.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+        
+        <!-- Footer -->
+        <footer class="app-footer-brand">
+            <p>© 2026 صيدليات آل مغاوري - جميع الحقوق محفوظة لمدير إدارة التدريب</p>
+        </footer>
+
+    </div>
+
+    <!-- Modal: View Evaluation Details -->
+    <div id="details-modal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-file-invoice"></i> تفاصيل استمارة المتابعة والتقييم</h3>
+                <button type="button" class="btn-close-modal" id="btn-close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body" id="print-area">
+                
+                <!-- Printable Form Sheet Header -->
+                <div class="sheet-print-header">
+                    <div class="sheet-logo">
+                        <img src="logo.png" alt="شعار صيدليات آل مغاوري">
+                    </div>
+                    <div class="sheet-title-info">
+                        <h2>استمارة تقييم ومتابعة الأداء اليومي للمتدرب</h2>
+                        <span class="badge-approved" id="modal-badge-approved">معتمد من مدير الفرع</span>
+                    </div>
+                    <div class="sheet-meta-info">
+                        <p><strong>تاريخ التقييم:</strong> <span id="m-eval-date">--</span></p>
+                        <p><strong>اليوم:</strong> <span id="m-eval-day">--</span></p>
+                    </div>
+                </div>
+                
+                <!-- Basic info grid -->
+                <div class="sheet-grid">
+                    <div class="sheet-cell"><strong>اسم المتدرب:</strong> <span id="m-trainee-name">--</span></div>
+                    <div class="sheet-cell"><strong>اسم الفرع:</strong> <span id="m-branch-name">--</span></div>
+                    <div class="sheet-cell"><strong>توقيت الشيفت:</strong> <span id="m-shift-time">--</span></div>
+                    <div class="sheet-cell"><strong>المشرف المتابع:</strong> <span id="m-supervisor-name">--</span></div>
+                </div>
+
+                <!-- Section I: Tasks -->
+                <div class="sheet-section">
+                    <h4 class="sheet-section-title">أولاً: المهام المطلوبة في اليوم</h4>
+                    <table class="sheet-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%">م</th>
+                                <th style="width: 60%">المهمة المطلوبة للشيفت</th>
+                                <th style="width: 30%">حالة التنفيذ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="m-tasks-tbody">
+                            <!-- Dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Section II: Performance Metrics -->
+                <div class="sheet-section">
+                    <h4 class="sheet-section-title">ثانياً: تقييم الأداء والسلوكيات العامة</h4>
+                    <table class="sheet-table text-center">
+                        <thead>
+                            <tr>
+                                <th style="width: 50%">معيار تقييم الأداء</th>
+                                <th style="width: 10%">ممتاز</th>
+                                <th style="width: 10%">جيد جداً</th>
+                                <th style="width: 10%">جيد</th>
+                                <th style="width: 10%">مقبول</th>
+                                <th style="width: 10%">ضعيف</th>
+                            </tr>
+                        </thead>
+                        <tbody id="m-ratings-tbody">
+                            <!-- Dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Notes -->
+                <div class="sheet-section">
+                    <h4 class="sheet-section-title">ثالثاً: ملاحظات إضافية وتوصيات المشرف</h4>
+                    <div class="sheet-notes-box" id="m-notes">
+                        --
+                    </div>
+                </div>
+
+                <!-- Manager Action Area -->
+                <div class="sheet-section manager-action-section hide-on-print">
+                    <h4 class="sheet-section-title"><i class="fa-solid fa-user-gear"></i> إجراءات واعتماد مدير الفرع</h4>
+                    <div class="manager-input-group">
+                        <label for="manager-feedback">ملاحظات واعتماد المدير (اختياري):</label>
+                        <textarea id="manager-feedback" rows="2" placeholder="اكتب ملاحظاتك وتوجيهاتك للمتدرب هنا قبل الاعتماد..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Signatures Area (Only shows when printed or approved) -->
+                <div class="sheet-signatures">
+                    <div class="sig-block">
+                        <p><strong>الزميل المتابع (المشرف):</strong></p>
+                        <p class="sig-val" id="m-sig-supervisor">--</p>
+                    </div>
+                    <div class="sig-block">
+                        <p><strong>اعتماد مدير الفرع:</strong></p>
+                        <p class="sig-val" id="m-sig-manager">بانتظار الاعتماد...</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="btn-close-modal-bottom">إغلاق</button>
+                <button type="button" class="btn-print" id="btn-print-sheet"><i class="fa-solid fa-print"></i> طباعة / حفظ PDF</button>
+                <button type="button" class="btn-approve" id="btn-approve-sheet"><i class="fa-solid fa-circle-check"></i> اعتماد وتقييم</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert / Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
