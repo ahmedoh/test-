@@ -10,7 +10,7 @@ const MOCK_DATA = [
         date: "2026-06-29",
         day: "الإثنين",
         traineeName: "أحمد فؤاد الشافعي",
-        branchName: "الفرع الرئيسي",
+        branchName: "فرع أبو الخير",
         shiftTime: "صباحي (8:00 ص - 4:00 م)",
         supervisorName: "د. محمد حسام",
         tasks: [
@@ -29,7 +29,7 @@ const MOCK_DATA = [
         date: "2026-06-30",
         day: "الثلاثاء",
         traineeName: "عمر عبد العزيز خالد",
-        branchName: "فرع المعادي",
+        branchName: "فرع أبو الخير",
         shiftTime: "مسائي (4:00 م - 12:00 ص)",
         supervisorName: "د. رانيا علي",
         tasks: [
@@ -60,9 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // تهيئة قاعدة البيانات المحلية
 function initDatabase() {
-    const localData = localStorage.getItem("almaghawry_evaluations");
+    const localData = localStorage.getItem("almaghawry_evaluations_v2");
     if (!localData) {
-        localStorage.setItem("almaghawry_evaluations", JSON.stringify(MOCK_DATA));
+        localStorage.setItem("almaghawry_evaluations_v2", JSON.stringify(MOCK_DATA));
         evaluations = [...MOCK_DATA];
     } else {
         evaluations = JSON.parse(localData);
@@ -166,7 +166,7 @@ function initAppEvents() {
     // مسح كافة البيانات وإعادة التصفير
     document.getElementById("btn-reset-data").addEventListener("click", () => {
         if(confirm("هل أنت متأكد من رغبتك في مسح كافة التقييمات المسجلة وإعادة تهيئة النظام؟")) {
-            localStorage.removeItem("almaghawry_evaluations");
+            localStorage.removeItem("almaghawry_evaluations_v2");
             initDatabase();
             renderDashboard();
             updatePendingBadge();
@@ -242,7 +242,7 @@ function saveEvaluation() {
 
     // حفظ في المصفوفة والتخزين المحلي
     evaluations.unshift(newEval); // إضافته في البداية
-    localStorage.setItem("almaghawry_evaluations", JSON.stringify(evaluations));
+    localStorage.setItem("almaghawry_evaluations_v2", JSON.stringify(evaluations));
 
     // إرسال إشعار للمستخدم
     showToast(`تم إرسال تقييم المتدرب "${traineeName}" بنجاح إلى مدير الفرع!`, "success");
@@ -508,7 +508,7 @@ function approveEvaluation() {
     evaluations[evIndex].managerSig = "م. أحمد مغاوري (مدير الفرع)"; // توقيع المدير الافتراضي للموقع
 
     // حفظ في التخزين المحلي
-    localStorage.setItem("almaghawry_evaluations", JSON.stringify(evaluations));
+    localStorage.setItem("almaghawry_evaluations_v2", JSON.stringify(evaluations));
 
     // إشعار بالنجاح وإغلاق المودال وتحديث لوحة التحكم
     showToast(`تم اعتماد استمارة تقييم المتدرب "${evaluations[evIndex].traineeName}" بنجاح!`, "success");
